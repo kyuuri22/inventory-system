@@ -101,6 +101,28 @@ class InventoryManager:
             for item, data in self.inventory.items():
                 print(f'{item} : {data["stock"]}')
 
+    # Web用: 入庫
+    def stock_in_web(self, item, qty):
+        if item not in self.inventory:
+            return False, '商品が登録されていません'
+        if qty <= 0:
+            return False, '1以上の数を入力してください'
+        self.inventory[item]['stock'] += qty
+        self._save()
+        return True, f'{item}を{qty}個入庫しました（現在: {self.inventory[item]["stock"]}個）'
+
+    # Web用: 出庫
+    def stock_out_web(self, item, qty):
+        if item not in self.inventory:
+            return False, '商品が登録されていません'
+        if qty <= 0:
+            return False, '1以上の数を入力してください'
+        if self.inventory[item]['stock'] < qty:
+            return False, f'在庫が足りません（現在: {self.inventory[item]["stock"]}個）'
+        self.inventory[item]['stock'] -= qty
+        self._save()
+        return True, f'{item}を{qty}個出庫しました（現在: {self.inventory[item]["stock"]}個）'
+
     # Web用: 商品登録
     def register_item_web(self, item_name):
         item_name = item_name.strip()

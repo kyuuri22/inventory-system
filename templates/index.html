@@ -22,6 +22,30 @@
         <button type="submit">登録</button>
     </form>
 
+    <h2>入庫</h2>
+    <form action="/stock_in" method="POST">
+        <select name="item" required>
+            <option value="">商品を選択</option>
+            {% for item in inventory %}
+                <option value="{{ item }}">{{ item }}</option>
+            {% endfor %}
+        </select>
+        <input type="number" name="qty" placeholder="数量" min="1" required>
+        <button type="submit">入庫</button>
+    </form>
+
+    <h2>出庫</h2>
+    <form action="/stock_out" method="POST">
+        <select name="item" required>
+            <option value="">商品を選択</option>
+            {% for item in inventory %}
+                <option value="{{ item }}">{{ item }}</option>
+            {% endfor %}
+        </select>
+        <input type="number" name="qty" placeholder="数量" min="1" required>
+        <button type="submit">出庫</button>
+    </form>
+
     {% if inventory %}
         <table border="1">
             <tr>

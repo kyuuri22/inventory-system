@@ -16,5 +16,27 @@ def register():
     flash(message, 'success' if success else 'error')
     return redirect(url_for('index'))
 
+@app.route('/stock_in', methods=['POST'])
+def stock_in():
+    item = request.form.get('item', '')
+    try:
+        qty = int(request.form.get('qty', 0))
+    except ValueError:
+        qty = 0
+    success, message = manager.stock_in_web(item, qty)
+    flash(message, 'success' if success else 'error')
+    return redirect(url_for('index'))
+
+@app.route('/stock_out', methods=['POST'])
+def stock_out():
+    item = request.form.get('item', '')
+    try:
+        qty = int(request.form.get('qty', 0))
+    except ValueError:
+        qty = 0
+    success, message = manager.stock_out_web(item, qty)
+    flash(message, 'success' if success else 'error')
+    return redirect(url_for('index'))
+
 if __name__ == '__main__':
     app.run(debug=True)
