@@ -46,6 +46,18 @@
         <button type="submit">出庫</button>
     </form>
 
+    <h2>商品名変更</h2>
+    <form action="/rename" method="POST">
+        <select name="old_name" required>
+            <option value="">変更する商品を選択</option>
+            {% for item in inventory %}
+                <option value="{{ item }}">{{ item }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="new_name" placeholder="新しい商品名" required>
+        <button type="submit">変更</button>
+    </form>
+
     <h2>商品削除</h2>
     <form action="/delete" method="POST">
         <select name="item_name" required>

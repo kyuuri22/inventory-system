@@ -101,6 +101,19 @@ class InventoryManager:
             for item, data in self.inventory.items():
                 print(f'{item} : {data["stock"]}')
 
+    # Web用: 商品名変更
+    def rename_item_web(self, old_name, new_name):
+        new_name = new_name.strip()
+        if old_name not in self.inventory:
+            return False, '商品が登録されていません'
+        if new_name == '':
+            return False, '新しい商品名を入力してください'
+        if new_name in self.inventory:
+            return False, 'その商品名は既に使われています'
+        self.inventory[new_name] = self.inventory.pop(old_name)
+        self._save()
+        return True, f'{old_name} を {new_name} に変更しました'
+
     # Web用: 商品削除
     def delete_item_web(self, item_name):
         if item_name not in self.inventory:

@@ -16,6 +16,14 @@ def register():
     flash(message, 'success' if success else 'error')
     return redirect(url_for('index'))
 
+@app.route('/rename', methods=['POST'])
+def rename():
+    old_name = request.form.get('old_name', '')
+    new_name = request.form.get('new_name', '')
+    success, message = manager.rename_item_web(old_name, new_name)
+    flash(message, 'success' if success else 'error')
+    return redirect(url_for('index'))
+
 @app.route('/delete', methods=['POST'])
 def delete():
     item_name = request.form.get('item_name', '')
