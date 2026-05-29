@@ -101,6 +101,14 @@ class InventoryManager:
             for item, data in self.inventory.items():
                 print(f'{item} : {data["stock"]}')
 
+    # Web用: 商品削除
+    def delete_item_web(self, item_name):
+        if item_name not in self.inventory:
+            return False, '商品が登録されていません'
+        del self.inventory[item_name]
+        self._save()
+        return True, f'{item_name}を削除しました'
+
     # Web用: 入庫
     def stock_in_web(self, item, qty):
         if item not in self.inventory:

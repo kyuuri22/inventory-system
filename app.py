@@ -16,6 +16,13 @@ def register():
     flash(message, 'success' if success else 'error')
     return redirect(url_for('index'))
 
+@app.route('/delete', methods=['POST'])
+def delete():
+    item_name = request.form.get('item_name', '')
+    success, message = manager.delete_item_web(item_name)
+    flash(message, 'success' if success else 'error')
+    return redirect(url_for('index'))
+
 @app.route('/stock_in', methods=['POST'])
 def stock_in():
     item = request.form.get('item', '')
