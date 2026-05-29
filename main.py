@@ -101,6 +101,16 @@ class InventoryManager:
             for item, data in self.inventory.items():
                 print(f'{item} : {data["stock"]}')
 
+    # Web用: 在庫数直接編集
+    def update_stock_web(self, item_name, qty):
+        if item_name not in self.inventory:
+            return False, '商品が登録されていません'
+        if qty < 0:
+            return False, '0以上の数を入力してください'
+        self.inventory[item_name]['stock'] = qty
+        self._save()
+        return True, f'{item_name}の在庫を{qty}個に更新しました'
+
     # Web用: 商品名変更
     def rename_item_web(self, old_name, new_name):
         new_name = new_name.strip()

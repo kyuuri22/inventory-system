@@ -16,6 +16,17 @@ def register():
     flash(message, 'success' if success else 'error')
     return redirect(url_for('index'))
 
+@app.route('/update_stock', methods=['POST'])
+def update_stock():
+    item_name = request.form.get('item_name', '')
+    try:
+        qty = int(request.form.get('qty', -1))
+    except ValueError:
+        qty = -1
+    success, message = manager.update_stock_web(item_name, qty)
+    flash(message, 'success' if success else 'error')
+    return redirect(url_for('index'))
+
 @app.route('/rename', methods=['POST'])
 def rename():
     old_name = request.form.get('old_name', '')

@@ -75,11 +75,19 @@
             <tr>
                 <th>商品名</th>
                 <th>在庫数</th>
+                <th>更新</th>
             </tr>
             {% for item, data in inventory.items() %}
             <tr>
                 <td>{{ item }}</td>
                 <td {% if data['stock'] == 0 %}style="color: red; font-weight: bold;"{% endif %}>{{ data['stock'] }}</td>
+                <td>
+                    <form action="/update_stock" method="POST" style="display: inline;">
+                        <input type="hidden" name="item_name" value="{{ item }}">
+                        <input type="number" name="qty" value="{{ data['stock'] }}" min="0" style="width: 60px;">
+                        <button type="submit">更新</button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </table>
