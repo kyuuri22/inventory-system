@@ -67,7 +67,7 @@
             {% for item, data in inventory.items() %}
             <tr>
                 <td>{{ item }}</td>
-                <td>{{ data['stock'] }}</td>
+                <td {% if data['stock'] == 0 %}style="color: red; font-weight: bold;"{% endif %}>{{ data['stock'] }}</td>
             </tr>
             {% endfor %}
         </table>
