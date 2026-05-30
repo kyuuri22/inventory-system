@@ -4,74 +4,206 @@
     <meta charset="UTF-8">
     <title>在庫管理システム</title>
     <style>
-        .success { color: green; }
-        .error { color: red; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: sans-serif;
+            background: #f4f6f8;
+            color: #333;
+            padding: 24px;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            min-width: 220px;
+        }
+
+        .card form {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        button {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #fff;
+            background: #4a90d9;
+        }
+
+        button:hover { background: #357abd; }
+
+        .btn-danger { background: #e05252; }
+        .btn-danger:hover { background: #c03a3a; }
+
+        .messages { margin-bottom: 16px; }
+
+        .success {
+            color: #2d7a2d;
+            background: #e6f4e6;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .error {
+            color: #c0392b;
+            background: #fdecea;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            max-width: 500px;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #4a90d9;
+            color: #fff;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        .zero { color: red; font-weight: bold; }
+
+        .update-form {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .update-form input { width: 70px; }
     </style>
 </head>
 <body>
-    <h1>📦 在庫一覧</h1>
+    <h1>📦 在庫管理システム</h1>
 
-    <h2>商品登録</h2>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% for category, message in messages %}
-            <p class="{{ category }}">{{ message }}</p>
-        {% endfor %}
-    {% endwith %}
-    <form action="/register" method="POST">
-        <input type="text" name="item_name" placeholder="商品名" required>
-        <button type="submit">登録</button>
-    </form>
-
-    <h2>入庫</h2>
-    <form action="/stock_in" method="POST">
-        <select name="item" required>
-            <option value="">商品を選択</option>
-            {% for item in inventory %}
-                <option value="{{ item }}">{{ item }}</option>
+    <div class="messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <p class="{{ category }}">{{ message }}</p>
             {% endfor %}
-        </select>
-        <input type="number" name="qty" placeholder="数量" min="1" required>
-        <button type="submit">入庫</button>
-    </form>
+        {% endwith %}
+    </div>
 
-    <h2>出庫</h2>
-    <form action="/stock_out" method="POST">
-        <select name="item" required>
-            <option value="">商品を選択</option>
-            {% for item in inventory %}
-                <option value="{{ item }}">{{ item }}</option>
-            {% endfor %}
-        </select>
-        <input type="number" name="qty" placeholder="数量" min="1" required>
-        <button type="submit">出庫</button>
-    </form>
+    <div class="cards">
+        <div class="card">
+            <h2>商品登録</h2>
+            <form action="/register" method="POST">
+                <input type="text" name="item_name" placeholder="商品名" required>
+                <button type="submit">登録</button>
+            </form>
+        </div>
 
-    <h2>商品名変更</h2>
-    <form action="/rename" method="POST">
-        <select name="old_name" required>
-            <option value="">変更する商品を選択</option>
-            {% for item in inventory %}
-                <option value="{{ item }}">{{ item }}</option>
-            {% endfor %}
-        </select>
-        <input type="text" name="new_name" placeholder="新しい商品名" required>
-        <button type="submit">変更</button>
-    </form>
+        <div class="card">
+            <h2>入庫</h2>
+            <form action="/stock_in" method="POST">
+                <select name="item" required>
+                    <option value="">商品を選択</option>
+                    {% for item in inventory %}
+                        <option value="{{ item }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="qty" placeholder="数量" min="1" required>
+                <button type="submit">入庫</button>
+            </form>
+        </div>
 
-    <h2>商品削除</h2>
-    <form action="/delete" method="POST">
-        <select name="item_name" required>
-            <option value="">商品を選択</option>
-            {% for item in inventory %}
-                <option value="{{ item }}">{{ item }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit" onclick="return confirm('本当に削除しますか？')">削除</button>
-    </form>
+        <div class="card">
+            <h2>出庫</h2>
+            <form action="/stock_out" method="POST">
+                <select name="item" required>
+                    <option value="">商品を選択</option>
+                    {% for item in inventory %}
+                        <option value="{{ item }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="qty" placeholder="数量" min="1" required>
+                <button type="submit">出庫</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>商品名変更</h2>
+            <form action="/rename" method="POST">
+                <select name="old_name" required>
+                    <option value="">変更する商品を選択</option>
+                    {% for item in inventory %}
+                        <option value="{{ item }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="new_name" placeholder="新しい商品名" required>
+                <button type="submit">変更</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>商品削除</h2>
+            <form action="/delete" method="POST">
+                <select name="item_name" required>
+                    <option value="">商品を選択</option>
+                    {% for item in inventory %}
+                        <option value="{{ item }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn-danger" onclick="return confirm('本当に削除しますか？')">削除</button>
+            </form>
+        </div>
+    </div>
 
     <h2>在庫一覧</h2>
     {% if inventory %}
-        <table border="1">
+        <table>
             <tr>
                 <th>商品名</th>
                 <th>在庫数</th>
@@ -80,11 +212,11 @@
             {% for item, data in inventory.items() %}
             <tr>
                 <td>{{ item }}</td>
-                <td {% if data['stock'] == 0 %}style="color: red; font-weight: bold;"{% endif %}>{{ data['stock'] }}</td>
+                <td class="{{ 'zero' if data['stock'] == 0 else '' }}">{{ data['stock'] }}</td>
                 <td>
-                    <form action="/update_stock" method="POST" style="display: inline;">
+                    <form action="/update_stock" method="POST" class="update-form">
                         <input type="hidden" name="item_name" value="{{ item }}">
-                        <input type="number" name="qty" value="{{ data['stock'] }}" min="0" style="width: 60px;">
+                        <input type="number" name="qty" value="{{ data['stock'] }}" min="0">
                         <button type="submit">更新</button>
                     </form>
                 </td>
