@@ -16,7 +16,11 @@ cd inventory-system
 pip install flask
 ```
 
-## 起動方法
+## デモ
+
+https://inventory-system-4evn.onrender.com
+
+## 起動方法（ローカル）
 
 **Web版（Flask）**
 ```bash
